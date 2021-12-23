@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // schedulers to update covid data
         $countryAPI= new CountryController();
         $worldWideAPI = new WorldWideStatsController();
         $schedule->call($countryAPI->getAll(true))->everyFourMinutes();

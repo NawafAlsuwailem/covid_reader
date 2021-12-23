@@ -14,6 +14,10 @@ class Country extends Model
 
     protected $table='countries';
 
+    /**
+     * fillable element for object Country
+     * @var string[]
+     */
     protected $fillable = [
         'Country',
         'CountryCode',
@@ -27,12 +31,21 @@ class Country extends Model
         'Date'
     ];
 
+    /**
+     * return country by id
+     * @param $id
+     * @return \Illuminate\Database\Query\Builder|mixed
+     */
     public static function find($id)
     {
         return DB::table('countries')->find($id);
     }
 
-
+    /**
+     * store list of countries in json format
+     * @param $countriesDataList
+     * @return mixed
+     */
     public function storeAllJson($countriesDataList){
         foreach ($countriesDataList as $country){
             $this->storeJson($country);
@@ -40,13 +53,17 @@ class Country extends Model
         return $countriesDataList;
     }
 
+    /**
+     * store single object for json
+     * @param $country
+     * @return void
+     * @throws \Exception
+     */
     public function storeJson($country){
-//        dd($country);
         $date = date("Y/m/d H:i:s");
         if(isset($country['Date'])){
             $date=  $country['Date'];
         }
-//        dd($date);
         DB::table('countries')->updateOrInsert(
             ['Country' => $country['Country'],
                 'Slug' => $country['Slug']],
@@ -62,47 +79,5 @@ class Country extends Model
                 'TotalRecovered' => $country['TotalRecovered'],
                 'Date' => date_format(new datetime($date), "Y/m/d H:i:s"),
             ]);
-//        try {
-//
-//
-//        } catch (\Exception $e) {
-//        }
-    }
-
-//    public function update($country, $id){
-//        try {
-//            DB::table('countries')->updateOrInsert(
-//                ['id' => $id],
-//                [
-//                    'Country' => $country['Country'],
-//                    'CountryCode' => $country['CountryCode'],
-//                    'Slug' => $country['Slug'],
-//                    'NewConfirmed' => $country['NewConfirmed'],
-//                    'TotalConfirmed' => $country['TotalConfirmed'],
-//                    'NewDeaths' => $country['NewDeaths'],
-//                    'TotalDeaths' => $country['TotalDeaths'],
-//                    'NewRecovered' => $country['NewRecovered'],
-//                    'TotalRecovered' => $country['TotalRecovered'],
-//                    'Date' => date_format(new datetime($country['Date']), "Y/m/d H:i:s"),
-//                ]);
-//        } catch (\Exception $e) {
-//        }
-//    }
-
-    public function store($request){
-        $country = new Country([
-            'Country' => $request->input('Country'),
-            'CountryCode' => $request->input('CountryCode'),
-            'Slug' => $request->input('Slug'),
-            'NewConfirmed' => $request->input('NewConfirmed'),
-            'TotalConfirmed' => $request->input('TotalConfirmed'),
-            'NewDeaths' => $request->input('NewDeaths'),
-            'TotalDeaths' => $request->input('TotalDeaths'),
-            'NewRecovered' => $request->input('NewRecovered'),
-            'TotalRecovered' => $request->input('TotalRecovered'),
-            'Date' => $request->input('Date'),
-        ]);
-        $country->save();
-        return response()->json('Country saved!');
     }
 }

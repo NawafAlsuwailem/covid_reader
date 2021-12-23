@@ -106,6 +106,8 @@
 </template>
 
 <script>
+    import Swal from "sweetalert2";
+
     export default {
         data() {
             return {
@@ -193,6 +195,12 @@
                     .then((response) => {
                         return response.data;
                     });
+                Swal.fire({
+                    title: 'success',
+                    text: this.countries[this.rowIndex]['Country'] + ' has been updated!',
+                    icon: 'success',
+                    confirmButtonText: 'Cool'
+                })
                 this.modalHandel.hide();
             },
             closeModal() {

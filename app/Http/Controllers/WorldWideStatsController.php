@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Country;
 use App\Models\WorldWide;
 use DateTime;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class WorldWideStatsController extends Controller
 {
     /**
-     * Display a listing of the resource.
      *
-     * @return |WorldWide[]|\Illuminate\Database\Eloquent\Collection
+     * @return WorldWide[]|Collection
      */
     public function index()
     {
@@ -25,7 +23,9 @@ class WorldWideStatsController extends Controller
     }
 
     /**
-     * @return |null
+     * get and save worldwide stats data from third party API
+     * @param $scheduler
+     * @return string
      */
     public function get($scheduler=false){
         $response = Http::get('https://api.covid19api.com/summary');
@@ -37,6 +37,11 @@ class WorldWideStatsController extends Controller
         return "Databases has been populated";
     }
 
+    /**
+     * save worldwide stats data
+     * @param $worldwideJson
+     * @return mixed
+     */
     public function save($worldwideJson){
         try {
             DB::table('world_wides')->updateOrInsert(
@@ -52,6 +57,10 @@ class WorldWideStatsController extends Controller
         return $worldwideJson;
     }
 
+    /**
+     * get worldwide stats data
+     * @return WorldWide|mixed
+     */
     public function getStats(){
         $worldwideData = $this->index()[0];
         unset($worldwideData["id"], $worldwideData["Date"]);
